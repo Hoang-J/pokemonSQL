@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Battle</title>
+    <link rel="stylesheet" href="./test.css">
+    <script src="./test.js"></script>
+
+    <!-- Pixel font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header">Pokemon Battle</div>
+    <img class="pokeball" src="./pokeball.png" alt="pokeball">
+    <p class="description">I choose you ...!</p>
+    <!-- <button onclick="startGame()">Start Game</button> -->
+    <!-- This button will reload the page once clicked -->
+    <button onclick="window.location.reload()" class="buttons">New Battle</button>
+    <!-- This button will get two pokemons to fill up the pics and info on the card -->
+    <button id="battleButton" onclick="battle()" class="buttons">Battle</button>
+    <!-- <div id="testingDiv"></div> -->
+    <div id="mainBattleDiv">
+        <!-- This div was needed to make sure that once the animation was clicked,
+        the whole card will show along with the animation, it won't get cut off -->
+        <div id="pokemon1Div" onclick="pokemon1Selected()">
+            <div id="pokemon1" class="pokemon">
+                <!-- These divs are where the different attributes/stats goes -->
+                <div id="pokemon1Name" class="pokemonInfo"></div>
+                <div id="pokemonPic1" class="defaultPicFrame"></div>
+                <div id="pokemon1Type" class="pokemonInfo"></div>
+                <div id="pokemon1Region" class="pokemonInfo"></div>
+                <div id="pokemon1Abilities" class="pokemonInfo"></div>
+            </div>
+        </div>
+        <!-- This div was needed to make sure that once the animation was clicked,
+        the whole card will show along with the animation, it won't get cut off -->
+        <div id="pokemon2Div" onclick="pokemon2Selected()">
+            <div id="pokemon2" class="pokemon">
+                <!-- These divs are where the different attributes/stats goes -->
+                <div id="pokemon2Name" class="pokemonInfo"></div>
+                <div id="pokemonPic2" class="defaultPicFrame"></div>
+                <div id="pokemon2Type" class="pokemonInfo"></div>
+                <div id="pokemon2Region" class="pokemonInfo"></div>
+                <div id="pokemon2Abilities" class="pokemonInfo"></div>
+            </div>
+        </div>
+    </div>
+    <div class="footer"></div>
+
+</body>
+</html>
