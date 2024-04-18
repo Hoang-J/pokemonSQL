@@ -96,8 +96,35 @@ app.get('/pokedex', async (req, res) => {
             res.json(await db.any('SELECT * FROM pokedex'));
         }
         else if(req.query.party != undefined) {
-            // await db.none('INSERT INTO pokemonparty,')
-            res.json(await db.many('SELECT pokedex.hp, pokedex.name, pokedex.type, pokedex.abilities, pokedex.defense, pokedex.attack FROM pokedex ORDER BY RANDOM() LIMIT 6'))
+            // Delete the table content so that will not have more than 6 pokemons at all times
+            await db.none('DELETE FROM pokemonParty');
+            // Store a list of 6 random pokemons in the party variable for access later
+            let party = await db.many('SELECT * FROM pokedex ORDER BY RANDOM() LIMIT 6');
+            // Go through the loop to add each pokemon and its info into the party of 6
+            for(i = 0; i < party.length; i++) {
+                await db.none('INSERT INTO pokemonParty(hp, name, type, abilities, image, attack, defense, attacks) VALUES($1, $2, $3, $4, $5, $6, $7, $8)', [party[i].hp, party[i].name, party[i].type, party[i].abilities, party[i].image, party[i].attack, party[i].defense, party[i].attacks]);
+            }
+            // console.log(party);
+            // Get 4 random moves for the pokemon
+            let movesParty =  await db.many('SELECT * FROM pokemonParty');
+            for(let j = 0; j < movesParty.length; j++) {
+                // console.log(movesParty.length);
+                let moves = await db.many('SELECT attacks.name FROM pokemonParty INNER JOIN attacks ON pokemonParty.type = attacks.type WHERE pokemonParty.id = $1 ORDER BY RANDOM() LIMIT 4', [movesParty[j].id]);
+                // console.log([movesParty[j].id]);
+                // 4 variation of moves for 6 pokemons, need to loop through inside initial loop
+                // looping through the 4 move pull from above loop
+                // listing just the name (disect it)
+                
+                for(let k = 0; k < moves.length; k++) {
+                    moves[k] = moves[k].name;
+                }
+                // make it easierto convert to string values
+                moves = '{' + moves.toString() + '}'; 
+                // console.log(moves);
+                await db.none('UPDATE pokemonParty SET attacks = $1 WHERE pokemonParty.id = $2', [moves, movesParty[j].id]);
+            }
+            // Selecting all but the ID from pokemonparty
+            res.json(await db.many('SELECT hp, name, type, abilities, image, attack, defense, attacks FROM pokemonParty'));
             }
         else {
             if(req.query.id != undefined) {
@@ -153,6 +180,35 @@ app.get('/pokedex', async (req, res) => {
         }
     }
       
+});
+
+/*
+Endpoint:
+    Gets the damage calculation
+*/
+app.get('/battle', async (req, res) => {
+    
+});
+
+/*
+Endpoint: 
+    Gets the background audio
+*/
+app.get('/backgroundAudio', async (req, res) => {
+    try {
+        const audioData = await db.many('SELECT name,image,music FROM stage');
+            if (!audioData || audioData.length === 0) {
+            return res.status(200).json({ error: 'No background audio data found' });
+        }
+         // Process each row with a for-loop
+        for (let i = 0; i < audioData.length; i++) {
+            console.log(audioData);
+        }
+        res.json(audioData);
+    } catch (error) {
+        console.error('Failed to get background audio data:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 /*
